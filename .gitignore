@@ -1,0 +1,25 @@
+# Environments
+.env
+.env.*
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+
+# Databases & local stores
+*.db
+*.sqlite
+cockroach-data/
+goroutine_dump/
+heap_profiler/
+inflight_trace_dump/
+pprof_dump/
+
+# IDE / OS
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
