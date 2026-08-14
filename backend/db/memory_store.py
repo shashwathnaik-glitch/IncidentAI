@@ -238,3 +238,35 @@ def get_incident(incident_id):
             "created_at": row[7]
         }
     return execute_transaction(_tx)
+
+def get_all_incidents(status_filter="ALL", search_query=None, limit=20, offset=0):
+    """Retrieves all incidents with optional status filtering and search query."""
+    def _tx(cur):
+        query = "SELECT id, title, description, severity, category, status, logs, created_at FROM incidents WHERE 1=1"
+        params = []
+        if status_filter and status_filter.upper() != "ALL":
+            query += " AND UPPER(status) = %s"
+            params.append(status_filter.upper())
+        if search_query:
+            query += " AND (title ILIKE %s OR category ILIKE %s OR description ILIKE %s)"
+            search_param = f"%{search_query}%"
+            params.extend([search_param, search_param, search_param])
+        query += " ORDER BY created_at DESC LIMIT %s OFFSET %s;"
+        params.extend([limit, offset])
+
+        cur.execute(query, params)
+        rows = cur.fetchall()
+        return [
+            {
+                "id": r[0],
+                "title": r[1],
+                "description": r[2],
+                "severity": r[3],
+                "category": r[4],
+                "status": r[5],
+                "logs": r[6],
+                "created_at": r[7]
+            }
+            for r in rows
+        ]
+    return execute_transaction(_tx)
