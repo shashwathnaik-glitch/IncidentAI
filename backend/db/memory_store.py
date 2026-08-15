@@ -84,11 +84,11 @@ def add_solution_attempt(
         cur.execute(
             """
             INSERT INTO solution_attempts (
-                incident_id, solution_text, outcome, failure_reason, 
-                performed_by, execution_duration_ms, confidence_at_execution, reward_delta
+                incident_id, solution_action, outcome, notes, 
+                executed_by, execution_duration_ms, confidence_at_execution, reward_delta
             )
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-            RETURNING id, incident_id, solution_text, outcome, failure_reason, created_at;
+            RETURNING id, incident_id, solution_action, outcome, notes, created_at;
             """,
             (
                 incident_id,
@@ -144,7 +144,7 @@ def search_similar_incidents(embedding, limit=5):
             # 2. Collect solution attempts for this incident
             cur.execute(
                 """
-                SELECT id, solution_text, outcome, failure_reason, performed_by, 
+                SELECT id, solution_action, outcome, notes, executed_by, 
                        execution_duration_ms, confidence_at_execution, reward_delta, created_at
                 FROM solution_attempts
                 WHERE incident_id = %s
@@ -188,7 +188,7 @@ def get_solution_attempts(incident_id):
     def _tx(cur):
         cur.execute(
             """
-            SELECT id, solution_text, outcome, failure_reason, performed_by, 
+            SELECT id, solution_action, outcome, notes, executed_by, 
                    execution_duration_ms, confidence_at_execution, reward_delta, created_at
             FROM solution_attempts
             WHERE incident_id = %s

@@ -21,6 +21,31 @@ from backend.interfaces.db_interface import IDatabaseRepository, UserRecord
 class CockroachDBRepository(IDatabaseRepository):
     """CockroachDB production repository implementation."""
 
+    _SEVERITY_APP_TO_DB = {
+        "P1": "critical",
+        "P2": "high",
+        "P3": "medium",
+        "P4": "low",
+    }
+    _SEVERITY_DB_TO_APP = {
+        "critical": "P1",
+        "high": "P2",
+        "medium": "P3",
+        "low": "P4",
+    }
+    _STATUS_APP_TO_DB = {
+        "open": "active",
+        "investigating": "investigating",
+        "resolved": "resolved",
+        "closed": "closed",
+    }
+    _STATUS_DB_TO_APP = {
+        "active": "open",
+        "investigating": "investigating",
+        "resolved": "resolved",
+        "closed": "closed",
+    }
+
     def __init__(self, connection_url: Optional[str] = None):
         self.connection_url = connection_url or settings.get_database_connection_url()
 
@@ -95,6 +120,8 @@ class CockroachDBRepository(IDatabaseRepository):
     def create_incident(self, incident_data: Dict) -> Dict:
         """Create a new incident record in CockroachDB."""
         incident_id = incident_data.get("id", uuid4())
+        severity_db = self._SEVERITY_APP_TO_DB.get(incident_data["severity"], incident_data["severity"])
+        status_db = self._STATUS_APP_TO_DB.get(incident_data["status"], incident_data["status"])
         query = """
             INSERT INTO incidents (id, title, description, category, severity, status, reported_by, created_at, updated_at)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -105,8 +132,8 @@ class CockroachDBRepository(IDatabaseRepository):
             incident_data["title"],
             incident_data["description"],
             incident_data["category"],
-            incident_data["severity"],
-            incident_data["status"],
+            severity_db,
+            status_db,
             str(incident_data["reported_by"]),
             incident_data["created_at"],
             incident_data["updated_at"]
@@ -117,7 +144,10 @@ class CockroachDBRepository(IDatabaseRepository):
                     cur.execute(query, params)
                     row = cur.fetchone()
                     conn.commit()
-                    return dict(row)
+                    ret = dict(row)
+                    ret["severity"] = self._SEVERITY_DB_TO_APP.get(ret["severity"], ret["severity"])
+                    ret["status"] = self._STATUS_DB_TO_APP.get(ret["status"], ret["status"])
+                    return ret
         except ConfigurationError:
             raise
         except Exception as err:
@@ -131,7 +161,12 @@ class CockroachDBRepository(IDatabaseRepository):
                 with conn.cursor() as cur:
                     cur.execute(query, (str(incident_id),))
                     row = cur.fetchone()
-                    return dict(row) if row else None
+                    if row:
+                        ret = dict(row)
+                        ret["severity"] = self._SEVERITY_DB_TO_APP.get(ret["severity"], ret["severity"])
+                        ret["status"] = self._STATUS_DB_TO_APP.get(ret["status"], ret["status"])
+                        return ret
+                    return None
         except ConfigurationError:
             raise
         except Exception as err:
@@ -148,10 +183,10 @@ class CockroachDBRepository(IDatabaseRepository):
         params = []
         if status:
             query += " AND status = %s"
-            params.append(status)
+            params.append(self._STATUS_APP_TO_DB.get(status, status))
         if severity:
             query += " AND severity = %s"
-            params.append(severity)
+            params.append(self._SEVERITY_APP_TO_DB.get(severity, severity))
         if category:
             query += " AND LOWER(category) = LOWER(%s)"
             params.append(category)
@@ -162,7 +197,13 @@ class CockroachDBRepository(IDatabaseRepository):
                 with conn.cursor() as cur:
                     cur.execute(query, tuple(params))
                     rows = cur.fetchall()
-                    return [dict(r) for r in rows]
+                    results = []
+                    for r in rows:
+                        d = dict(r)
+                        d["severity"] = self._SEVERITY_DB_TO_APP.get(d["severity"], d["severity"])
+                        d["status"] = self._STATUS_DB_TO_APP.get(d["status"], d["status"])
+                        results.append(d)
+                    return results
         except ConfigurationError:
             raise
         except Exception as err:
@@ -176,6 +217,10 @@ class CockroachDBRepository(IDatabaseRepository):
         set_clauses = []
         params = []
         for key, val in update_data.items():
+            if key == "severity":
+                val = self._SEVERITY_APP_TO_DB.get(val, val)
+            elif key == "status":
+                val = self._STATUS_APP_TO_DB.get(val, val)
             set_clauses.append(f"{key} = %s")
             params.append(val)
         
@@ -192,7 +237,12 @@ class CockroachDBRepository(IDatabaseRepository):
                     cur.execute(query, tuple(params))
                     row = cur.fetchone()
                     conn.commit()
-                    return dict(row) if row else None
+                    if row:
+                        ret = dict(row)
+                        ret["severity"] = self._SEVERITY_DB_TO_APP.get(ret["severity"], ret["severity"])
+                        ret["status"] = self._STATUS_DB_TO_APP.get(ret["status"], ret["status"])
+                        return ret
+                    return None
         except ConfigurationError:
             raise
         except Exception as err:
@@ -201,14 +251,20 @@ class CockroachDBRepository(IDatabaseRepository):
     def update_incident_status(self, incident_id: UUID, new_status: str) -> Optional[Dict]:
         """Update incident status in CockroachDB."""
         now_iso = datetime.now(timezone.utc).isoformat()
+        status_db = self._STATUS_APP_TO_DB.get(new_status, new_status)
         query = "UPDATE incidents SET status = %s, updated_at = %s WHERE id = %s RETURNING id, title, description, category, severity, status, reported_by, created_at, updated_at;"
         try:
             with self._get_connection() as conn:
                 with conn.cursor() as cur:
-                    cur.execute(query, (new_status, now_iso, str(incident_id)))
+                    cur.execute(query, (status_db, now_iso, str(incident_id)))
                     row = cur.fetchone()
                     conn.commit()
-                    return dict(row) if row else None
+                    if row:
+                        ret = dict(row)
+                        ret["severity"] = self._SEVERITY_DB_TO_APP.get(ret["severity"], ret["severity"])
+                        ret["status"] = self._STATUS_DB_TO_APP.get(ret["status"], ret["status"])
+                        return ret
+                    return None
         except ConfigurationError:
             raise
         except Exception as err:

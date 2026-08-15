@@ -80,7 +80,35 @@ export const adminService = {
         headers: getAuthHeaders()
       });
       if (response.ok) {
-        return await response.json();
+        const data = await response.json();
+        const realMetrics = data.metrics || {};
+        const realSolution = data.solution_analytics || {};
+        const realStatus = data.system_status || {};
+        
+        return {
+          activeIncidents: realMetrics.active_incidents ?? 0,
+          resolvedIncidents: realMetrics.resolved_incidents ?? 0,
+          totalUsers: data.user_counts_by_role ? (data.user_counts_by_role.employee + data.user_counts_by_role.admin) : 0,
+          activeEmployees: data.user_counts_by_role ? data.user_counts_by_role.employee : 0,
+          activeAdmins: data.user_counts_by_role ? data.user_counts_by_role.admin : 0,
+          mttrReductionPercent: null,
+          aiRecommendationAccuracy: null,
+          vectorMemoriesCount: null,
+          nodeClusterHealth: realStatus.database_connected ? 'HEALTHY' : 'DEGRADED',
+          
+          solutionEffectiveness: {
+            success: realSolution.success_count ?? 0,
+            failure: realSolution.failure_count ?? 0,
+            partial: realSolution.partial_count ?? 0,
+            rejected: realSolution.rejected_count ?? 0,
+            unknown: realSolution.unknown_count ?? 0,
+            totalAttempts: realSolution.total_solution_attempts ?? 0,
+            successRate: realSolution.solution_success_rate_pct ?? 0.0
+          },
+          solutionLeaderboard: null,
+          employeeUsage: null,
+          categoryDistribution: null
+        };
       }
     } catch (err) {
       console.warn('Backend API /api/v1/admin/dashboard offline. Using fallback metrics.', err);

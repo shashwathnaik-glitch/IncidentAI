@@ -6,7 +6,9 @@ CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
+    name VARCHAR(255),
     role VARCHAR(50) NOT NULL CHECK (role IN ('employee', 'admin')),
+    department VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -21,6 +23,7 @@ CREATE TABLE IF NOT EXISTS incidents (
     status VARCHAR(50) NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'investigating', 'resolved', 'closed')),
     logs TEXT,
     embedding VECTOR(1024),
+    reported_by UUID REFERENCES users(id) ON DELETE SET NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -29,10 +32,10 @@ CREATE TABLE IF NOT EXISTS incidents (
 CREATE TABLE IF NOT EXISTS solution_attempts (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     incident_id UUID NOT NULL REFERENCES incidents(id) ON DELETE CASCADE,
-    solution_text TEXT NOT NULL,
+    solution_action TEXT NOT NULL,
     outcome VARCHAR(50) NOT NULL CHECK (outcome IN ('success', 'failure', 'partial', 'rejected', 'unknown')),
-    failure_reason TEXT,
-    performed_by UUID REFERENCES users(id) ON DELETE SET NULL,
+    notes TEXT,
+    executed_by UUID REFERENCES users(id) ON DELETE SET NULL,
     execution_duration_ms INT,
     confidence_at_execution FLOAT,
     reward_delta INT,

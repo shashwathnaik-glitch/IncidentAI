@@ -271,7 +271,7 @@ export const LoginForm = ({ onSuccessRedirect }) => {
 
             <button
               type="button"
-              onClick={() => fillDemoAccount('admin@company.com', 'adminpassword123', 'admin')}
+              onClick={() => fillDemoAccount('admin@company.com', 'admin123', 'admin')}
               className="p-2.5 rounded-xl bg-slate-950/60 hover:bg-slate-800/80 border border-slate-800 hover:border-indigo-500/30 text-left transition-all group"
             >
               <div className="text-xs font-semibold text-slate-200 group-hover:text-indigo-400">

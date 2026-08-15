@@ -16,6 +16,21 @@ function getAuthHeaders() {
   return headers;
 }
 
+function mapBackendIncidentToFrontend(inc) {
+  if (!inc) return inc;
+  const revSeverityMap = {
+    P1: 'CRITICAL',
+    P2: 'HIGH',
+    P3: 'MEDIUM',
+    P4: 'LOW'
+  };
+  return {
+    ...inc,
+    status: inc.status ? inc.status.toUpperCase() : inc.status,
+    severity: revSeverityMap[inc.severity] || inc.severity
+  };
+}
+
 // Initial sample incident database with solution attempt memory histories
 const INITIAL_INCIDENTS = [
   {
@@ -25,7 +40,7 @@ const INITIAL_INCIDENTS = [
     severity: 'CRITICAL',
     category: 'Database',
     logs: 'FATAL: sorry, too many clients already\n[psycopg2.OperationalError] connection to server at "cockroach-db-0.service" failed: FATAL: remaining connection slots reserved for non-replication superuser connections',
-    status: 'INVESTIGATING',
+    status: 'investigating',
     reporter: 'Alex Rivera',
     createdAt: new Date(Date.now() - 25 * 60000).toISOString(),
     resolutionOutcome: 'In progress: AI recommended scaling connection pool to 500.',
@@ -82,7 +97,7 @@ const INITIAL_INCIDENTS = [
     severity: 'HIGH',
     category: 'Backend API',
     logs: 'WARN [AuthService] Password hash verification took 4520ms for user@company.com\nINFO [Bcrypt] CPU thread saturation detected on core 2',
-    status: 'OPEN',
+    status: 'open',
     reporter: 'Jordan Lee',
     createdAt: new Date(Date.now() - 110 * 60000).toISOString(),
     resolutionOutcome: 'Open: Pending bcrypt work factor adjustment.',
@@ -128,7 +143,7 @@ const INITIAL_INCIDENTS = [
     severity: 'MEDIUM',
     category: 'AI Service',
     logs: 'botocore.exceptions.ClientError: An error occurred (ThrottlingException) when calling the InvokeModel operation: Rate limit exceeded',
-    status: 'RESOLVED',
+    status: 'resolved',
     reporter: 'Sarah Chen',
     createdAt: new Date(Date.now() - 340 * 60000).toISOString(),
     resolvedAt: new Date(Date.now() - 280 * 60000).toISOString(),
@@ -162,15 +177,20 @@ const INITIAL_INCIDENTS = [
 function getStoredIncidents() {
   try {
     const data = localStorage.getItem('incidentmind_incidents');
-    return data ? JSON.parse(data) : INITIAL_INCIDENTS;
+    const list = data ? JSON.parse(data) : INITIAL_INCIDENTS;
+    return list.map(mapBackendIncidentToFrontend);
   } catch {
-    return INITIAL_INCIDENTS;
+    return INITIAL_INCIDENTS.map(mapBackendIncidentToFrontend);
   }
 }
 
 function saveStoredIncidents(incidents) {
   try {
-    localStorage.setItem('incidentmind_incidents', JSON.stringify(incidents));
+    const mapped = incidents.map(inc => ({
+      ...inc,
+      status: inc.status ? inc.status.toLowerCase() : inc.status
+    }));
+    localStorage.setItem('incidentmind_incidents', JSON.stringify(mapped));
   } catch (err) {
     console.error('Failed to persist incidents:', err);
   }
@@ -183,7 +203,8 @@ export const incidentService = {
         headers: getAuthHeaders()
       });
       if (response.ok) {
-        return await response.json();
+        const list = await response.json();
+        return Array.isArray(list) ? list.map(mapBackendIncidentToFrontend) : list;
       }
     } catch {
       // fallback handled
@@ -200,7 +221,7 @@ export const incidentService = {
       const queryParams = new URLSearchParams({
         page: page.toString(),
         limit: limit.toString(),
-        status: statusFilter,
+        status: statusFilter === 'ALL' ? '' : statusFilter.toLowerCase(),
         search: searchQuery
       });
       const response = await fetch(`${API_BASE_URL}/incidents?${queryParams}`, {
@@ -208,8 +229,10 @@ export const incidentService = {
       });
       if (response.ok) {
         const data = await response.json();
+        const rawItems = data.items || data.incidents || data;
+        const items = Array.isArray(rawItems) ? rawItems.map(mapBackendIncidentToFrontend) : rawItems;
         return {
-          incidents: data.items || data.incidents || data,
+          incidents: items,
           total: data.total || data.length,
           page: data.page || page,
           limit: data.limit || limit,
@@ -223,7 +246,7 @@ export const incidentService = {
     const all = getStoredIncidents();
     const filtered = all.filter(inc => {
       const matchesStatus = statusFilter === 'ALL' || inc.status === statusFilter;
-      const matchesSearch = !searchQuery || 
+      const matchesSearch = !searchQuery ||
         inc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         inc.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
         inc.id.toLowerCase().includes(searchQuery.toLowerCase());
@@ -256,7 +279,8 @@ export const incidentService = {
         headers: getAuthHeaders()
       });
       if (response.ok) {
-        return await response.json();
+        const inc = await response.json();
+        return mapBackendIncidentToFrontend(inc);
       }
     } catch {
       // fallback
@@ -268,10 +292,17 @@ export const incidentService = {
   },
 
   async submitAndAnalyzeIncident(incidentData, reporterName = 'Support Engineer') {
+    const severityMap = {
+      'CRITICAL': 'P1',
+      'HIGH': 'P2',
+      'MEDIUM': 'P3',
+      'LOW': 'P4'
+    };
+
     const payload = {
       title: incidentData.title.trim(),
       description: incidentData.description.trim(),
-      severity: incidentData.severity || 'HIGH',
+      severity: severityMap[incidentData.severity] || 'P2',
       category: incidentData.category || 'Database',
       logs: incidentData.logs ? incidentData.logs.trim() : null
     };
@@ -287,6 +318,7 @@ export const incidentService = {
 
       if (response.ok) {
         createdIncident = await response.json();
+        createdIncident = mapBackendIncidentToFrontend(createdIncident);
       } else if (response.status === 400 || response.status === 422) {
         const errorData = await response.json();
         throw new Error(errorData.detail || errorData.message || 'Invalid incident payload.');
@@ -309,7 +341,7 @@ export const incidentService = {
         severity: payload.severity,
         category: payload.category,
         logs: payload.logs,
-        status: 'INVESTIGATING',
+        status: 'investigating',
         reporter: reporterName,
         createdAt: new Date().toISOString(),
         resolutionOutcome: 'Investigating with AI memory analysis.',
@@ -327,13 +359,13 @@ export const incidentService = {
   async approveResolution(incidentId, solutionText, outcome = 'success', feedbackReason = null, operatorName = 'Operator') {
     const list = getStoredIncidents();
     const index = list.findIndex(i => i.id === incidentId);
-    
+
     if (index === -1) {
       throw new Error(`Incident ${incidentId} not found.`);
     }
 
     const incident = list[index];
-    incident.status = outcome === 'success' ? 'RESOLVED' : 'INVESTIGATING';
+    incident.status = outcome === 'success' ? 'resolved' : 'investigating';
     if (outcome === 'success') {
       incident.resolvedAt = new Date().toISOString();
       incident.resolutionOutcome = `Resolved by ${operatorName}: ${solutionText}`;

@@ -162,8 +162,12 @@ export const AdminDashboard = () => {
                   <TrendingUp className="w-4 h-4" />
                 </div>
               </div>
-              <div className="text-2xl font-extrabold text-emerald-400">↓ {metrics.mttrReductionPercent}%</div>
-              <div className="text-xs text-slate-400 mt-1">Mean Time to Resolution</div>
+              <div className="text-2xl font-extrabold text-emerald-400">
+                {metrics.mttrReductionPercent !== null ? `↓ ${metrics.mttrReductionPercent}%` : 'N/A'}
+              </div>
+              <div className="text-xs text-slate-400 mt-1">
+                {metrics.mttrReductionPercent !== null ? 'Mean Time to Resolution' : 'MTTR calculations pending'}
+              </div>
             </div>
 
             <div className="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 backdrop-blur-xl">
@@ -184,8 +188,12 @@ export const AdminDashboard = () => {
                   <Database className="w-4 h-4" />
                 </div>
               </div>
-              <div className="text-2xl font-extrabold text-slate-100">{metrics.vectorMemoriesCount}</div>
-              <div className="text-xs text-blue-400 mt-1">CockroachDB pgvector embeddings</div>
+              <div className="text-2xl font-extrabold text-slate-100">
+                {metrics.vectorMemoriesCount !== null ? metrics.vectorMemoriesCount : 'N/A'}
+              </div>
+              <div className="text-xs text-blue-400 mt-1">
+                {metrics.vectorMemoriesCount !== null ? 'CockroachDB pgvector embeddings' : 'Embedding counts pending'}
+              </div>
             </div>
 
             <div className="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 backdrop-blur-xl">
@@ -195,8 +203,12 @@ export const AdminDashboard = () => {
                   <BrainCircuit className="w-4 h-4" />
                 </div>
               </div>
-              <div className="text-2xl font-extrabold text-purple-400">{metrics.aiRecommendationAccuracy}%</div>
-              <div className="text-xs text-slate-400 mt-1">Amazon Bedrock LLM reasoning</div>
+              <div className="text-2xl font-extrabold text-purple-400">
+                {metrics.aiRecommendationAccuracy !== null ? `${metrics.aiRecommendationAccuracy}%` : 'N/A'}
+              </div>
+              <div className="text-xs text-slate-400 mt-1">
+                {metrics.aiRecommendationAccuracy !== null ? 'Amazon Bedrock LLM reasoning' : 'Accuracy tracking pending'}
+              </div>
             </div>
           </div>
 
@@ -210,22 +222,28 @@ export const AdminDashboard = () => {
                 <span>Incident Activity by Category</span>
               </h2>
 
-              <div className="space-y-4">
-                {(metrics.categoryDistribution || []).map((cat, idx) => (
-                  <div key={idx} className="space-y-1.5">
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="font-semibold text-slate-200">{cat.category}</span>
-                      <span className="text-slate-400 font-mono">{cat.count} incidents ({cat.percent}%)</span>
+              {metrics.categoryDistribution ? (
+                <div className="space-y-4">
+                  {metrics.categoryDistribution.map((cat, idx) => (
+                    <div key={idx} className="space-y-1.5">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="font-semibold text-slate-200">{cat.category}</span>
+                        <span className="text-slate-400 font-mono">{cat.count} incidents ({cat.percent}%)</span>
+                      </div>
+                      <div className="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                        <div 
+                          className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full" 
+                          style={{ width: `${cat.percent}%` }} 
+                        />
+                      </div>
                     </div>
-                    <div className="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
-                      <div 
-                        className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full" 
-                        style={{ width: `${cat.percent}%` }} 
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center p-8 bg-slate-950/40 rounded-2xl border border-slate-800/50 text-slate-500 text-xs font-semibold min-h-[160px]">
+                  <span>Category Distribution Analytics not yet available</span>
+                </div>
+              )}
             </div>
 
             {/* Employee Usage & Activity */}
@@ -235,26 +253,32 @@ export const AdminDashboard = () => {
                 <span>Employee Usage & Operator Performance</span>
               </h2>
 
-              <div className="space-y-3">
-                {(metrics.employeeUsage || []).map((emp, i) => (
-                  <div key={i} className="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800/80 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center font-bold text-xs text-blue-300">
-                        {emp.name.substring(0, 2).toUpperCase()}
+              {metrics.employeeUsage ? (
+                <div className="space-y-3">
+                  {metrics.employeeUsage.map((emp, i) => (
+                    <div key={i} className="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800/80 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center font-bold text-xs text-blue-300">
+                          {emp.name.substring(0, 2).toUpperCase()}
+                        </div>
+                        <div>
+                          <div className="text-xs font-semibold text-slate-200">{emp.name}</div>
+                          <div className="text-[10px] text-slate-500">{emp.title} • Active {emp.lastActive}</div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="text-xs font-semibold text-slate-200">{emp.name}</div>
-                        <div className="text-[10px] text-slate-500">{emp.title} • Active {emp.lastActive}</div>
-                      </div>
-                    </div>
 
-                    <div className="text-right shrink-0">
-                      <div className="text-xs font-bold text-emerald-400">{emp.resolvedCount} Resolved</div>
-                      <div className="text-[10px] text-indigo-400 font-semibold">{emp.rewardPoints} pts</div>
+                      <div className="text-right shrink-0">
+                        <div className="text-xs font-bold text-emerald-400">{emp.resolvedCount} Resolved</div>
+                        <div className="text-[10px] text-indigo-400 font-semibold">{emp.rewardPoints} pts</div>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center p-8 bg-slate-950/40 rounded-2xl border border-slate-800/50 text-slate-500 text-xs font-semibold min-h-[160px]">
+                  <span>Employee Performance Analytics not yet available</span>
+                </div>
+              )}
             </div>
 
           </div>
@@ -320,34 +344,40 @@ export const AdminDashboard = () => {
                 <span className="text-xs text-indigo-400 font-mono">Ranked by Success Count</span>
               </div>
 
-              <div className="space-y-3">
-                {(metrics.solutionLeaderboard || []).map((item) => (
-                  <div 
-                    key={item.rank}
-                    className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 flex items-center justify-between gap-4"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-xl font-extrabold text-xs flex items-center justify-center ${
-                        item.rank === 1 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' :
-                        item.rank === 2 ? 'bg-slate-400/20 text-slate-300 border border-slate-400/40' :
-                        'bg-amber-700/20 text-amber-400 border border-amber-700/40'
-                      }`}>
-                        #{item.rank}
+              {metrics.solutionLeaderboard ? (
+                <div className="space-y-3">
+                  {metrics.solutionLeaderboard.map((item) => (
+                    <div 
+                      key={item.rank}
+                      className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 flex items-center justify-between gap-4"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-xl font-extrabold text-xs flex items-center justify-center ${
+                          item.rank === 1 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' :
+                          item.rank === 2 ? 'bg-slate-400/20 text-slate-300 border border-slate-400/40' :
+                          'bg-amber-700/20 text-amber-400 border border-amber-700/40'
+                        }`}>
+                          #{item.rank}
+                        </div>
+
+                        <div>
+                          <div className="text-xs font-bold text-slate-100">{item.fixTitle}</div>
+                          <div className="text-[10px] text-slate-500">Category: {item.category} • Author: {item.author}</div>
+                        </div>
                       </div>
 
-                      <div>
-                        <div className="text-xs font-bold text-slate-100">{item.fixTitle}</div>
-                        <div className="text-[10px] text-slate-500">Category: {item.category} • Author: {item.author}</div>
+                      <div className="text-right shrink-0">
+                        <div className="text-xs font-extrabold text-emerald-400">{item.successCount} Successful Fixes</div>
+                        <div className="text-[10px] text-amber-400 font-semibold">{item.rewardPoints} Reward Credits</div>
                       </div>
                     </div>
-
-                    <div className="text-right shrink-0">
-                      <div className="text-xs font-extrabold text-emerald-400">{item.successCount} Successful Fixes</div>
-                      <div className="text-[10px] text-amber-400 font-semibold">{item.rewardPoints} Reward Credits</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center p-8 bg-slate-950/40 rounded-2xl border border-slate-800/50 text-slate-500 text-xs font-semibold">
+                  <span>Top Effective Solution Leaderboard not yet available</span>
+                </div>
+              )}
             </div>
 
           </div>

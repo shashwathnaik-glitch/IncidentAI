@@ -98,7 +98,7 @@ def verify_vector_index():
             # Insert solutions attempts for target (failure, success)
             cur.execute(
                 """
-                INSERT INTO solution_attempts (incident_id, solution_text, outcome, failure_reason, performed_by)
+                INSERT INTO solution_attempts (incident_id, solution_action, outcome, notes, executed_by)
                 VALUES 
                     (%s, 'Restart database server', 'failure', 'caused 30s connection timeout for API client', %s),
                     (%s, 'Kill blocker transaction PID', 'success', NULL, %s);

@@ -18,11 +18,8 @@ export const Navbar = ({ currentView, onNavigate }) => {
         
         {/* Logo & Brand */}
         <div className="flex items-center gap-6">
-          <button 
-            onClick={() => onNavigate(user.role === 'admin' ? 'admin' : 'dashboard')}
-            className="flex items-center gap-2.5 text-left group focus:outline-none"
-          >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-all">
+          <div className="flex items-center gap-2.5 text-left select-none">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
               <Cpu className="w-5 h-5" />
             </div>
             <div>
@@ -34,38 +31,20 @@ export const Navbar = ({ currentView, onNavigate }) => {
                 <span>CockroachDB Active</span>
               </div>
             </div>
-          </button>
+          </div>
 
-          {/* Navigation Links */}
-          <nav className="flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800 text-xs font-semibold">
-            <button
-              onClick={() => onNavigate('dashboard')}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all ${
-                currentView === 'dashboard'
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
+          {/* Non-interactive session role badge */}
+          {user?.role === 'admin' ? (
+            <div className="px-3 py-1.5 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-xs font-semibold flex items-center gap-1.5 select-none">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Admin Console</span>
+            </div>
+          ) : (
+            <div className="px-3 py-1.5 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold flex items-center gap-1.5 select-none">
               <LayoutDashboard className="w-3.5 h-3.5" />
-              <span className="hidden xs:inline sm:inline">Employee</span>
-              <span className="inline xs:hidden">Emp</span>
-            </button>
-
-            {user?.role === 'admin' && (
-              <button
-                onClick={() => onNavigate('admin')}
-                className={`px-2.5 sm:px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all ${
-                  currentView === 'admin'
-                    ? 'bg-indigo-600 text-white shadow-md'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span className="hidden xs:inline sm:inline">Admin</span>
-                <span className="inline xs:hidden">Adm</span>
-              </button>
-            )}
-          </nav>
+              <span>Employee Portal</span>
+            </div>
+          )}
         </div>
 
         {/* User Info & Logout */}

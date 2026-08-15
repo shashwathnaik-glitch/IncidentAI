@@ -30,7 +30,7 @@ const DEMO_USERS = [
   {
     id: 'usr_adm_001',
     email: 'admin@company.com',
-    password: 'adminpassword123',
+    password: 'admin123',
     name: 'Sarah Chen',
     title: 'IT Administrator & Lead SRE',
     role: 'admin',

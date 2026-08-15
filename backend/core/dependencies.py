@@ -30,7 +30,9 @@ def get_db_repository() -> IDatabaseRepository:
     In production runtime (settings.TESTING is False), CockroachDBRepository is instantiated.
     """
     global _mock_db_instance
-    if settings.TESTING:
+    from backend.core.config import USE_REAL_DB
+
+    if settings.TESTING or not USE_REAL_DB:
         if _mock_db_instance is None:
             try:
                 from backend.tests.mocks.mock_db_repository import MockDatabaseRepository
