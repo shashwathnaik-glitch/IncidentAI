@@ -110,8 +110,19 @@ select {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif !important;
   font-size: 13px !important;
   font-weight: 500 !important;
-  padding: 8px 12px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
   transition: border-color 150ms ease-out, box-shadow 150ms ease-out !important;
+}
+
+input.pl-10 {
+  padding-left: 40px !important;
+}
+
+input.pr-10 {
+  padding-right: 40px !important;
 }
 
 input[type="text"]:focus, 
@@ -182,6 +193,12 @@ div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 > div {
 
 /* Desktop Sidebar Overrides (translucent left sidebar) */
 @media (min-width: 1024px) {
+  /* Shift content wrapper to the right to make room for fixed sidebar */
+  div.min-h-screen.flex.flex-col {
+    padding-left: 240px !important;
+    box-sizing: border-box !important;
+  }
+
   /* Translucent sidebar container mapping */
   header.sticky {
     width: 240px !important;
@@ -236,16 +253,12 @@ div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 > div {
     width: 100% !important;
   }
 
-  /* Shift main workspace content to the right */
   main {
-    margin-left: 240px !important;
-    max-width: calc(100% - 240px) !important;
     padding: 32px !important;
     box-sizing: border-box !important;
   }
 
   footer {
-    margin-left: 240px !important;
     border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
     background: rgba(30, 30, 30, 0.4) !important;
   }
