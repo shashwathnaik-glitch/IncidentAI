@@ -238,6 +238,7 @@ div.flex.bg-slate-950\/80 button.bg-blue-500 *,
 
 /* Override hero welcome banner and AI display cards to flat white cards */
 .bg-gradient-to-r.from-blue-950\/60.via-slate-900.to-indigo-950\/50,
+.bg-gradient-to-r.from-indigo-950\/60.via-slate-900.to-purple-950\/50,
 .bg-gradient-to-r.from-blue-950\/40.via-slate-950.to-indigo-950\/30 {
   background: #ffffff !important;
   border-color: rgba(0, 0, 0, 0.08) !important;
@@ -265,7 +266,11 @@ select {
   transition: border-color 150ms ease-out, box-shadow 150ms ease-out !important;
 }
 
-input.pl-10 {
+input.pl-8 {
+  padding-left: 32px !important;
+}
+
+input.pl-9, input.pl-10 {
   padding-left: 40px !important;
 }
 
