@@ -169,6 +169,7 @@ div.min-h-screen {
 .bg-gradient-to-r.from-blue-600.to-indigo-600,
 .bg-gradient-to-r.from-blue-600.to-cyan-600,
 .bg-gradient-to-tr.from-blue-600.to-indigo-600,
+.bg-gradient-to-r.from-indigo-600.to-purple-600,
 button.bg-blue-600, 
 button.bg-blue-500,
 button.bg-indigo-600 {
@@ -182,9 +183,34 @@ button.bg-indigo-600 {
 .bg-gradient-to-r.from-blue-600.to-indigo-600 *,
 .bg-gradient-to-r.from-blue-600.to-cyan-600 *,
 .bg-gradient-to-tr.from-blue-600.to-indigo-600 *,
+.bg-gradient-to-r.from-indigo-600.to-purple-600 *,
 button.bg-blue-600 *,
 button.bg-blue-500 *,
 button.bg-indigo-600 * {
+  color: #ffffff !important;
+}
+
+/* Danger Action Buttons - Solid flat red */
+.bg-gradient-to-r.from-red-600.to-rose-600 {
+  background: #c93b2b !important;
+  color: #ffffff !important;
+  border: 1px solid #c93b2b !important;
+  background-image: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+.bg-gradient-to-r.from-red-600.to-rose-600 * {
+  color: #ffffff !important;
+}
+
+/* Success Action Buttons - Solid flat green */
+.bg-gradient-to-r.from-emerald-600.to-teal-600 {
+  background: #248a3d !important;
+  color: #ffffff !important;
+  border: 1px solid #248a3d !important;
+  background-image: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+.bg-gradient-to-r.from-emerald-600.to-teal-600 * {
   color: #ffffff !important;
 }
 
