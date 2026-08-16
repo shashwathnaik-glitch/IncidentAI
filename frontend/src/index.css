@@ -1,25 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  --color-slate-950: #1e1e1e;
-  --color-slate-900: #252525;
-  --color-slate-850: #2c2c2e;
-  --color-slate-800: rgba(255, 255, 255, 0.08);
-  --color-slate-700: rgba(255, 255, 255, 0.12);
-  --color-slate-600: rgba(255, 255, 255, 0.16);
-  --color-slate-500: #8e8e93;
-  --color-slate-400: #aeaeb2;
-  --color-slate-300: #d1d1d6;
-  --color-slate-200: #e5e5ea;
-  --color-slate-100: #f2f2f7;
-  --color-slate-50: #f5f5f7;
+  --color-slate-950: #f5f5f7;
+  --color-slate-900: #ffffff;
+  --color-slate-850: #e5e5ea;
+  --color-slate-800: rgba(0, 0, 0, 0.08);
+  --color-slate-700: rgba(0, 0, 0, 0.12);
+  --color-slate-600: rgba(0, 0, 0, 0.16);
+  --color-slate-500: #6e6e73;
+  --color-slate-400: #8e8e93;
+  --color-slate-300: #aeaeb2;
+  --color-slate-200: #d1d1d6;
+  --color-slate-100: #e5e5ea;
+  --color-slate-5: #f5f5f7;
 
   --color-blue-600: #007aff;
   --color-blue-500: #007aff;
   --color-blue-400: #0a84ff;
-  --color-blue-300: #30d158;
-  --color-emerald-400: #30d158;
-  --color-emerald-500: #30d158;
+  --color-blue-300: #248a3d;
+  --color-emerald-400: #248a3d;
+  --color-emerald-500: #248a3d;
 
   --radius-3xl: 12px;
   --radius-2xl: 10px;
@@ -29,14 +29,14 @@
 
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
 
-  --shadow-2xl: 0 4px 12px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 4px 12px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-2xl: 0 4px 12px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 4px 12px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 @layer base {
   body {
-    background-color: #1e1e1e !important;
-    color: #f5f5f7 !important;
+    background-color: #f5f5f7 !important;
+    color: #1d1d1f !important;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif !important;
     font-size: 13px !important;
     font-weight: 500 !important;
@@ -47,6 +47,7 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif !important;
+    color: #1d1d1f !important;
     font-weight: 500 !important;
     letter-spacing: -0.022em !important;
   }
@@ -61,7 +62,7 @@
   font-weight: 500 !important;
 }
 
-/* Custom scrollbars matching macOS */
+/* Custom scrollbars matching macOS light mode */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -70,18 +71,18 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.12);
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(0, 0, 0, 0.22);
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 
-/* Frosted glass cards and surfaces */
+/* Frosted glass cards and surfaces (macOS light glassmorphism) */
 .bg-slate-900\/80, 
 .bg-slate-900, 
 .bg-slate-900\/95,
@@ -90,11 +91,11 @@
 .bg-slate-950,
 .bg-slate-900\/50,
 .bg-slate-950\/85 {
-  background: rgba(40, 40, 40, 0.6) !important;
+  background: rgba(255, 255, 255, 0.7) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06) !important;
 }
 
 /* Ensure the root layout container does not create a new containing block for position: fixed descendants */
@@ -108,16 +109,93 @@ div.min-h-screen {
   contain: none !important;
 }
 
+/* Global text colors overrides for light mode contrast */
+.text-white, 
+.text-slate-50, 
+.text-slate-100, 
+.text-slate-200 {
+  color: #1d1d1f !important;
+}
+
+.text-slate-300, 
+.text-slate-400, 
+.text-slate-500 {
+  color: #6e6e73 !important;
+}
+
+/* Restore white text color specifically for text inside primary buttons and solid red/blue/indigo/emerald badges */
+.bg-blue-600, .bg-blue-500, .bg-red-600, .bg-red-500, .bg-emerald-500, .bg-indigo-600, .bg-indigo-500, .bg-emerald-600,
+.bg-blue-600 *, .bg-blue-500 *, .bg-red-600 *, .bg-red-500 *, .bg-emerald-500 *, .bg-indigo-600 *, .bg-indigo-500 *, .bg-emerald-600 *,
+span.bg-emerald-500\/20, span.bg-blue-500\/20, span.bg-red-500\/20, span.bg-indigo-500\/20,
+div.bg-emerald-500\/10, div.bg-blue-500\/10, div.bg-red-500\/10, div.bg-indigo-500\/10 {
+  /* Keep default solid container color styling readable, only mapping children if background is not light overlay */
+}
+
+/* Specific button state text restorations */
+button.bg-blue-600, button.bg-blue-600 *, 
+.bg-blue-600 span, .bg-blue-600 svg,
+.bg-blue-500 span, .bg-blue-500 svg,
+.bg-indigo-600 span, .bg-indigo-600 svg,
+.bg-gradient-to-r.from-blue-600 span, .bg-gradient-to-r.from-blue-600 svg {
+  color: #ffffff !important;
+}
+
+/* Adjust warning / alert / success color overrides for light background contrast */
+.text-emerald-400, .text-emerald-500 {
+  color: #248a3d !important;
+}
+.bg-emerald-500\/10 {
+  background-color: rgba(36, 138, 61, 0.08) !important;
+}
+
+.text-red-400, .text-red-500 {
+  color: #c93b2b !important;
+}
+.bg-red-500\/10 {
+  background-color: rgba(201, 59, 43, 0.08) !important;
+}
+
+.text-indigo-400, .text-indigo-500 {
+  color: #5856d6 !important;
+}
+.bg-indigo-500\/10 {
+  background-color: rgba(88, 86, 214, 0.08) !important;
+}
+
+/* Hide ambient glows and gradient effects */
+.fixed.bg-blue-600\/10, 
+.fixed.bg-indigo-600\/10,
+.absolute.bg-blue-500\/10.rounded-full.blur-3xl {
+  display: none !important;
+}
+
+/* Flatten primary gradient buttons to solid Apple Accent Blue */
+.bg-gradient-to-r.from-blue-600.to-indigo-600,
+.bg-gradient-to-r.from-blue-600.to-cyan-600,
+.bg-gradient-to-tr.from-blue-600.to-indigo-600 {
+  background: #007aff !important;
+  background-image: none !important;
+}
+
+/* Override hero welcome banner and AI display cards to flat light grey/white cards */
+.bg-gradient-to-r.from-blue-950\/60.via-slate-900.to-indigo-950\/50,
+.bg-gradient-to-r.from-blue-950\/40.via-slate-950.to-indigo-950\/30 {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+  background-image: none !important;
+}
+
 /* Focus rings for inputs and buttons */
 input[type="text"], 
 input[type="email"], 
 input[type="password"], 
 textarea, 
 select {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(0, 0, 0, 0.03) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
   border-radius: 6px !important;
-  color: #f5f5f7 !important;
+  color: #1d1d1f !important;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif !important;
   font-size: 13px !important;
   font-weight: 500 !important;
@@ -187,7 +265,7 @@ button:focus-visible, .btn:focus-visible {
 
 div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 {
   animation: macos-backdrop-fade-in 150ms ease-out forwards !important;
-  background: rgba(0, 0, 0, 0.46) !important;
+  background: rgba(0, 0, 0, 0.16) !important;
   backdrop-filter: blur(10px) !important;
   -webkit-backdrop-filter: blur(10px) !important;
 }
@@ -195,11 +273,11 @@ div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 {
 div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 > div {
   animation: macos-modal-scale-in 150ms ease-out forwards !important;
   border-radius: 12px !important;
-  background: rgba(30, 30, 30, 0.72) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
   backdrop-filter: blur(30px) !important;
   -webkit-backdrop-filter: blur(30px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Desktop Sidebar Overrides (translucent left sidebar) */
@@ -219,10 +297,10 @@ div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 > div {
     top: 0 !important;
     bottom: 0 !important;
     z-index: 50 !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
     border-bottom: none !important;
     padding: 24px 16px !important;
-    background: rgba(30, 30, 30, 0.5) !important;
+    background: rgba(255, 255, 255, 0.6) !important;
     backdrop-filter: blur(30px) !important;
     -webkit-backdrop-filter: blur(30px) !important;
   }
@@ -258,7 +336,7 @@ div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 > div {
 
   header.sticky .border-l {
     border-left: none !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
     padding-left: 0 !important;
     padding-top: 16px !important;
     width: 100% !important;
@@ -270,7 +348,7 @@ div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 > div {
   }
 
   footer {
-    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-    background: rgba(30, 30, 30, 0.4) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+    background: rgba(255, 255, 255, 0.5) !important;
   }
 }
