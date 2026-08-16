@@ -13,6 +13,11 @@ ALTER TABLE solution_attempts ADD COLUMN IF NOT EXISTS notes TEXT;
 ALTER TABLE solution_attempts ADD COLUMN IF NOT EXISTS executed_by UUID REFERENCES users(id) ON DELETE SET NULL;
 
 -- 4. Safely populate new columns from old ones if they exist
+-- Ensure old columns exist temporarily during migration run to prevent syntax crashes on fresh databases
+ALTER TABLE solution_attempts ADD COLUMN IF NOT EXISTS solution_text TEXT;
+ALTER TABLE solution_attempts ADD COLUMN IF NOT EXISTS failure_reason TEXT;
+ALTER TABLE solution_attempts ADD COLUMN IF NOT EXISTS performed_by UUID;
+
 UPDATE solution_attempts 
 SET 
   solution_action = COALESCE(solution_action, solution_text),
@@ -25,5 +30,7 @@ WHERE (solution_action IS NULL AND solution_text IS NOT NULL)
 -- 5. Apply the NOT NULL constraint to solution_action
 ALTER TABLE solution_attempts ALTER COLUMN solution_action SET NOT NULL;
 
--- 6. Drop the NOT NULL constraint on solution_text to allow new inserts to omit it
-ALTER TABLE solution_attempts ALTER COLUMN solution_text DROP NOT NULL;
+-- 6. Clean up legacy columns from both fresh and upgraded databases
+ALTER TABLE solution_attempts DROP COLUMN IF EXISTS solution_text;
+ALTER TABLE solution_attempts DROP COLUMN IF EXISTS failure_reason;
+ALTER TABLE solution_attempts DROP COLUMN IF EXISTS performed_by;
