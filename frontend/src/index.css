@@ -3,20 +3,20 @@
 @theme {
   --color-slate-950: #f5f5f7;
   --color-slate-900: #ffffff;
-  --color-slate-850: #e5e5ea;
+  --color-slate-850: #ffffff;
   --color-slate-800: rgba(0, 0, 0, 0.08);
   --color-slate-700: rgba(0, 0, 0, 0.12);
   --color-slate-600: rgba(0, 0, 0, 0.16);
-  --color-slate-500: #6e6e73;
+  --color-slate-500: #71717a;
   --color-slate-400: #8e8e93;
   --color-slate-300: #aeaeb2;
   --color-slate-200: #d1d1d6;
   --color-slate-100: #e5e5ea;
   --color-slate-5: #f5f5f7;
 
-  --color-blue-600: #007aff;
-  --color-blue-500: #007aff;
-  --color-blue-400: #0a84ff;
+  --color-blue-600: #6d5ffb;
+  --color-blue-500: #6d5ffb;
+  --color-blue-400: #8c80ff;
   --color-blue-300: #248a3d;
   --color-emerald-400: #248a3d;
   --color-emerald-500: #248a3d;
@@ -29,8 +29,8 @@
 
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
 
-  --shadow-2xl: 0 4px 12px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-xl: 0 4px 12px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
 @layer base {
@@ -82,7 +82,7 @@
   background-clip: padding-box;
 }
 
-/* Frosted glass cards and surfaces (macOS light glassmorphism) */
+/* Frosted glass cards and surfaces (Nova light cards) */
 .bg-slate-900\/80, 
 .bg-slate-900, 
 .bg-slate-900\/95,
@@ -95,7 +95,7 @@
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
   border-color: rgba(0, 0, 0, 0.08) !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04) !important;
 }
 
 /* Ensure the root layout container does not create a new containing block for position: fixed descendants */
@@ -120,24 +120,19 @@ div.min-h-screen {
 .text-slate-300, 
 .text-slate-400, 
 .text-slate-500 {
-  color: #6e6e73 !important;
+  color: #71717a !important;
 }
 
-/* Restore white text color specifically for text inside primary buttons and solid red/blue/indigo/emerald badges */
-.bg-blue-600, .bg-blue-500, .bg-red-600, .bg-red-500, .bg-emerald-500, .bg-indigo-600, .bg-indigo-500, .bg-emerald-600,
-.bg-blue-600 *, .bg-blue-500 *, .bg-red-600 *, .bg-red-500 *, .bg-emerald-500 *, .bg-indigo-600 *, .bg-indigo-500 *, .bg-emerald-600 *,
-span.bg-emerald-500\/20, span.bg-blue-500\/20, span.bg-red-500\/20, span.bg-indigo-500\/20,
-div.bg-emerald-500\/10, div.bg-blue-500\/10, div.bg-red-500\/10, div.bg-indigo-500\/10 {
-  /* Keep default solid container color styling readable, only mapping children if background is not light overlay */
+/* Solid background text color restorations (like warning blocks or error flags) */
+.bg-emerald-500\/10 *, .bg-red-500\/10 *, .bg-indigo-500\/10 * {
+  color: inherit !important;
 }
 
-/* Specific button state text restorations */
-button.bg-blue-600, button.bg-blue-600 *, 
-.bg-blue-600 span, .bg-blue-600 svg,
-.bg-blue-500 span, .bg-blue-500 svg,
-.bg-indigo-600 span, .bg-indigo-600 svg,
-.bg-gradient-to-r.from-blue-600 span, .bg-gradient-to-r.from-blue-600 svg {
-  color: #ffffff !important;
+/* Accent logo text color correction */
+.bg-gradient-to-r.from-blue-400.to-indigo-400.bg-clip-text.text-transparent {
+  background-clip: unset !important;
+  -webkit-background-clip: unset !important;
+  color: #6d5ffb !important;
 }
 
 /* Adjust warning / alert / success color overrides for light background contrast */
@@ -156,10 +151,10 @@ button.bg-blue-600, button.bg-blue-600 *,
 }
 
 .text-indigo-400, .text-indigo-500 {
-  color: #5856d6 !important;
+  color: #6d5ffb !important;
 }
 .bg-indigo-500\/10 {
-  background-color: rgba(88, 86, 214, 0.08) !important;
+  background-color: #f3f0ff !important;
 }
 
 /* Hide ambient glows and gradient effects */
@@ -169,24 +164,87 @@ button.bg-blue-600, button.bg-blue-600 *,
   display: none !important;
 }
 
-/* Flatten primary gradient buttons to solid Apple Accent Blue */
+/* Primary Action Buttons - Solid dark charcoal (#18181B) background, white text */
 .bg-gradient-to-r.from-blue-600.to-indigo-600,
 .bg-gradient-to-r.from-blue-600.to-cyan-600,
-.bg-gradient-to-tr.from-blue-600.to-indigo-600 {
-  background: #007aff !important;
+.bg-gradient-to-tr.from-blue-600.to-indigo-600,
+button.bg-blue-600, 
+button.bg-blue-500,
+button.bg-indigo-600 {
+  background: #18181b !important;
+  color: #ffffff !important;
+  border: 1px solid #18181b !important;
   background-image: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Override hero welcome banner and AI display cards to flat light grey/white cards */
+.bg-gradient-to-r.from-blue-600.to-indigo-600 *,
+.bg-gradient-to-r.from-blue-600.to-cyan-600 *,
+.bg-gradient-to-tr.from-blue-600.to-indigo-600 *,
+button.bg-blue-600 *,
+button.bg-blue-500 *,
+button.bg-indigo-600 * {
+  color: #ffffff !important;
+}
+
+/* Style active tab switchers with soft light gray background and dark text */
+div.flex.bg-slate-900\/80 button.bg-blue-600,
+div.flex.bg-slate-900\/80 button.bg-blue-500,
+div.flex.bg-slate-950\/70 button.bg-blue-600,
+div.flex.bg-slate-950\/70 button.bg-blue-500,
+div.flex.bg-slate-950 button.bg-blue-600,
+div.flex.bg-slate-950 button.bg-blue-500,
+div.flex.bg-slate-950\/80 button.bg-blue-600,
+div.flex.bg-slate-950\/80 button.bg-blue-500,
+.md\:col-span-6 button.bg-blue-600,
+.md\:col-span-6 button.bg-blue-500 {
+  background: #f4f4f5 !important;
+  color: #18181b !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  box-shadow: none !important;
+}
+
+div.flex.bg-slate-900\/80 button.bg-blue-600 *,
+div.flex.bg-slate-900\/80 button.bg-blue-500 *,
+div.flex.bg-slate-950\/70 button.bg-blue-600 *,
+div.flex.bg-slate-950\/70 button.bg-blue-500 *,
+div.flex.bg-slate-950 button.bg-blue-600 *,
+div.flex.bg-slate-950 button.bg-blue-500 *,
+div.flex.bg-slate-950\/80 button.bg-blue-600 *,
+div.flex.bg-slate-950\/80 button.bg-blue-500 *,
+.md\:col-span-6 button.bg-blue-600 *,
+.md\:col-span-6 button.bg-blue-500 * {
+  color: #18181b !important;
+}
+
+/* Stat Widgets & Chip Badges Mapped to Nova Pastel Tints */
+.bg-blue-500\/10, .bg-blue-600\/10 {
+  background-color: #f3f0ff !important;
+  color: #6d5ffb !important;
+}
+.bg-indigo-500\/10, .bg-indigo-600\/10 {
+  background-color: #f3f0ff !important;
+  color: #6d5ffb !important;
+}
+.bg-emerald-500\/10, .bg-emerald-600\/10 {
+  background-color: rgba(36, 138, 61, 0.06) !important;
+  color: #248a3d !important;
+}
+.bg-red-500\/10, .bg-red-600\/10 {
+  background-color: rgba(201, 59, 43, 0.06) !important;
+  color: #c93b2b !important;
+}
+
+/* Override hero welcome banner and AI display cards to flat white cards */
 .bg-gradient-to-r.from-blue-950\/60.via-slate-900.to-indigo-950\/50,
 .bg-gradient-to-r.from-blue-950\/40.via-slate-950.to-indigo-950\/30 {
   background: #ffffff !important;
   border-color: rgba(0, 0, 0, 0.08) !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04) !important;
   background-image: none !important;
 }
 
-/* Focus rings for inputs and buttons */
+/* Focus rings for inputs and buttons - Neutral grey ring */
 input[type="text"], 
 input[type="email"], 
 input[type="password"], 
@@ -220,8 +278,8 @@ input[type="password"]:focus,
 textarea:focus, 
 select:focus {
   outline: none !important;
-  border-color: #007aff !important;
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.25) !important;
+  border-color: #a1a1aa !important;
+  box-shadow: 0 0 0 3px rgba(161, 161, 170, 0.25) !important;
 }
 
 /* General button styling overrides */
@@ -239,7 +297,7 @@ button:active, .btn:active {
 
 button:focus-visible, .btn:focus-visible {
   outline: none !important;
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.25) !important;
+  box-shadow: 0 0 0 3px rgba(161, 161, 170, 0.25) !important;
 }
 
 /* Modal Animations & Layout overrides */
@@ -280,7 +338,7 @@ div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 > div {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Desktop Sidebar Overrides (translucent left sidebar) */
+/* Desktop Sidebar Overrides (translucent left sidebar - white theme) */
 @media (min-width: 1024px) {
   /* Shift content wrapper to the right to make room for fixed sidebar (only when the sidebar is present) */
   div.min-h-screen.flex.flex-col:has(header.sticky) {
@@ -288,7 +346,7 @@ div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 > div {
     box-sizing: border-box !important;
   }
 
-  /* Translucent sidebar container mapping */
+  /* Flat white sidebar container */
   header.sticky {
     width: 240px !important;
     height: 100vh !important;
@@ -300,9 +358,8 @@ div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 > div {
     border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
     border-bottom: none !important;
     padding: 24px 16px !important;
-    background: rgba(255, 255, 255, 0.6) !important;
-    backdrop-filter: blur(30px) !important;
-    -webkit-backdrop-filter: blur(30px) !important;
+    background: #fafafa !important;
+    box-shadow: none !important;
   }
 
   header.sticky > div {
@@ -351,4 +408,78 @@ div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 > div {
     border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
     background: rgba(255, 255, 255, 0.5) !important;
   }
+}
+
+/* Sidebar Role Badges specifically matched to layout indicators */
+header.sticky div.px-3.py-1\.5:has(svg.lucide-shield-check),
+header.sticky div.px-3.py-1\.5:has(svg.lucide-layout-dashboard) {
+  background: #f3f0ff !important;
+  border-color: rgba(109, 95, 251, 0.2) !important;
+  color: #6d5ffb !important;
+  border-radius: 8px !important;
+}
+
+header.sticky div.px-3.py-1\.5:has(svg.lucide-shield-check) *,
+header.sticky div.px-3.py-1\.5:has(svg.lucide-layout-dashboard) * {
+  color: #6d5ffb !important;
+}
+
+header.sticky span.bg-indigo-500\/20, 
+header.sticky span.bg-blue-500\/20 {
+  background: #e4e4e7 !important;
+  color: #18181b !important;
+}
+
+/* Sidebar Logout Button */
+header.sticky button {
+  background: #f4f4f5 !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  color: #71717a !important;
+}
+header.sticky button:hover {
+  background: #fee2e2 !important;
+  color: #ef4444 !important;
+  border-color: rgba(239, 68, 68, 0.2) !important;
+}
+
+/* BUG FIX 1: Historical Solution Attempts Memory panel layout overlap scoped to list headers */
+div.space-y-4.pt-2:has(h3 svg.lucide-history) > div.flex {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+}
+
+div.space-y-4.pt-2:has(h3 svg.lucide-history) > div.flex > div:last-child {
+  flex-wrap: wrap !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  justify-content: flex-start !important;
+  gap: 4px !important;
+}
+
+/* BUG FIX 2: Similar Incidents Vector Matches card overflow scoped to similarity grids */
+div.space-y-3.pt-2:has(div.font-mono) > div.grid > div {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  min-width: 0 !important;
+}
+
+div.space-y-3.pt-2:has(div.font-mono) > div.grid > div > div:first-child {
+  min-width: 0 !important;
+  flex: 1 !important;
+}
+
+div.space-y-3.pt-2:has(div.font-mono) > div.grid > div > div:first-child > div:last-child {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+}
+
+div.space-y-3.pt-2:has(div.font-mono) > div.grid > div > div:last-child {
+  flex-shrink: 0 !important;
 }
