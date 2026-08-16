@@ -1,29 +1,265 @@
 @import "tailwindcss";
 
-@layer base {
-  body {
-    background-color: #090d16;
-    color: #f8fafc;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    min-height: 100vh;
-    background-image: 
-      radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.08) 0px, transparent 50%);
-  }
+@theme {
+  --color-slate-950: #1e1e1e;
+  --color-slate-900: #252525;
+  --color-slate-850: #2c2c2e;
+  --color-slate-800: rgba(255, 255, 255, 0.08);
+  --color-slate-700: rgba(255, 255, 255, 0.12);
+  --color-slate-600: rgba(255, 255, 255, 0.16);
+  --color-slate-500: #8e8e93;
+  --color-slate-400: #aeaeb2;
+  --color-slate-300: #d1d1d6;
+  --color-slate-200: #e5e5ea;
+  --color-slate-100: #f2f2f7;
+  --color-slate-50: #f5f5f7;
+
+  --color-blue-600: #007aff;
+  --color-blue-500: #007aff;
+  --color-blue-400: #0a84ff;
+  --color-blue-300: #30d158;
+  --color-emerald-400: #30d158;
+  --color-emerald-500: #30d158;
+
+  --radius-3xl: 12px;
+  --radius-2xl: 10px;
+  --radius-xl: 8px;
+  --radius-lg: 6px;
+  --radius-md: 4px;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+
+  --shadow-2xl: 0 4px 12px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 4px 12px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-/* Custom scrollbars */
+@layer base {
+  body {
+    background-color: #1e1e1e !important;
+    color: #f5f5f7 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.011em !important;
+    background-image: none !important;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.022em !important;
+  }
+
+  h1 { font-size: 20px !important; }
+  h2 { font-size: 16px !important; }
+  h3 { font-size: 14px !important; }
+}
+
+/* Global typography weights override */
+.font-bold, .font-semibold, .font-extrabold {
+  font-weight: 500 !important;
+}
+
+/* Custom scrollbars matching macOS */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: rgba(255, 255, 255, 0.22);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Frosted glass cards and surfaces */
+.bg-slate-900\/80, 
+.bg-slate-900, 
+.bg-slate-900\/95,
+.bg-slate-950\/70, 
+.bg-slate-950\/60, 
+.bg-slate-950,
+.bg-slate-900\/50,
+.bg-slate-950\/85 {
+  background: rgba(40, 40, 40, 0.6) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Focus rings for inputs and buttons */
+input[type="text"], 
+input[type="email"], 
+input[type="password"], 
+textarea, 
+select {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 6px !important;
+  color: #f5f5f7 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out !important;
+}
+
+input.pl-10 {
+  padding-left: 40px !important;
+}
+
+input.pr-10 {
+  padding-right: 40px !important;
+}
+
+input[type="text"]:focus, 
+input[type="email"]:focus, 
+input[type="password"]:focus, 
+textarea:focus, 
+select:focus {
+  outline: none !important;
+  border-color: #007aff !important;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.25) !important;
+}
+
+/* General button styling overrides */
+button, .btn {
+  border-radius: 6px !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  transition: transform 150ms ease-out, background-color 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out !important;
+}
+
+button:active, .btn:active {
+  transform: scale(0.98) !important;
+}
+
+button:focus-visible, .btn:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.25) !important;
+}
+
+/* Modal Animations & Layout overrides */
+@keyframes macos-modal-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes macos-backdrop-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 {
+  animation: macos-backdrop-fade-in 150ms ease-out forwards !important;
+  background: rgba(0, 0, 0, 0.46) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 > div {
+  animation: macos-modal-scale-in 150ms ease-out forwards !important;
+  border-radius: 12px !important;
+  background: rgba(30, 30, 30, 0.72) !important;
+  backdrop-filter: blur(30px) !important;
+  -webkit-backdrop-filter: blur(30px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Desktop Sidebar Overrides (translucent left sidebar) */
+@media (min-width: 1024px) {
+  /* Shift content wrapper to the right to make room for fixed sidebar */
+  div.min-h-screen.flex.flex-col {
+    padding-left: 240px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Translucent sidebar container mapping */
+  header.sticky {
+    width: 240px !important;
+    height: 100vh !important;
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    z-index: 50 !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-bottom: none !important;
+    padding: 24px 16px !important;
+    background: rgba(30, 30, 30, 0.5) !important;
+    backdrop-filter: blur(30px) !important;
+    -webkit-backdrop-filter: blur(30px) !important;
+  }
+
+  header.sticky > div {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    height: 100% !important;
+    justify-content: space-between !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    gap: 32px !important;
+  }
+
+  header.sticky > div > div:first-child {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 24px !important;
+    width: 100% !important;
+  }
+
+  header.sticky > div > div:first-child > div:first-child {
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  header.sticky > div > div:last-child {
+    flex-direction: column-reverse !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+    width: 100% !important;
+  }
+
+  header.sticky .border-l {
+    border-left: none !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding-left: 0 !important;
+    padding-top: 16px !important;
+    width: 100% !important;
+  }
+
+  main {
+    padding: 32px !important;
+    box-sizing: border-box !important;
+  }
+
+  footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: rgba(30, 30, 30, 0.4) !important;
+  }
 }
