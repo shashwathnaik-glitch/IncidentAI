@@ -133,6 +133,7 @@ div.min-h-screen {
   background-clip: unset !important;
   -webkit-background-clip: unset !important;
   color: #6d5ffb !important;
+  background-image: none !important;
 }
 
 /* Adjust warning / alert / success color overrides for light background contrast */
@@ -443,14 +444,14 @@ header.sticky button:hover {
 }
 
 /* BUG FIX 1: Historical Solution Attempts Memory panel layout overlap scoped to list headers */
-div.space-y-4.pt-2:has(h3 svg.lucide-history) > div.flex {
+div.space-y-4.pt-2:has(h3) > div.flex {
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
   gap: 12px !important;
 }
 
-div.space-y-4.pt-2:has(h3 svg.lucide-history) > div.flex > div:last-child {
+div.space-y-4.pt-2:has(h3) > div.flex > div:last-child {
   flex-wrap: wrap !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -482,4 +483,20 @@ div.space-y-3.pt-2:has(div.font-mono) > div.grid > div > div:first-child > div:l
 
 div.space-y-3.pt-2:has(div.font-mono) > div.grid > div > div:last-child {
   flex-shrink: 0 !important;
+}
+
+/* Adjust warning / alert amber text colors for contrast on light background */
+.text-amber-200, .text-amber-300, .text-amber-300\/90 {
+  color: #78350f !important;
+}
+.text-amber-400 {
+  color: #b45309 !important;
+}
+.bg-amber-500\/10, .bg-amber-500\/15 {
+  background-color: #fffbeb !important;
+  border-color: rgba(217, 119, 6, 0.2) !important;
+}
+.bg-amber-500\/20 {
+  background-color: rgba(217, 119, 6, 0.12) !important;
+  color: #78350f !important;
 }
