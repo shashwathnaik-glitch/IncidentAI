@@ -39,6 +39,40 @@ export const EmployeeDashboard = ({ onNavigate }) => {
     loadIncidents();
   }, []);
 
+  const [loadingAI, setLoadingAI] = useState(false);
+
+  useEffect(() => {
+    if (selectedIncident && !selectedIncident.aiRecommendation) {
+      fetchRecommendation(selectedIncident.id, selectedIncident.logs);
+    }
+  }, [selectedIncident?.id]);
+
+  const fetchRecommendation = async (incidentId, logs) => {
+    setLoadingAI(true);
+    try {
+      const recommendation = await incidentService.getAIRecommendation(incidentId, logs);
+      if (recommendation) {
+        setIncidents(prev => prev.map(inc => {
+          if (inc.id === incidentId) {
+            return { ...inc, aiRecommendation: recommendation };
+          }
+          return inc;
+        }));
+        setSelectedIncident(prev => {
+          if (prev && prev.id === incidentId) {
+            return { ...prev, aiRecommendation: recommendation };
+          }
+          return prev;
+        });
+      }
+    } catch (err) {
+      console.error("Failed to fetch AI recommendation:", err);
+    } finally {
+      setLoadingAI(false);
+    }
+  };
+
+
   const loadIncidents = async () => {
     setLoading(true);
     try {

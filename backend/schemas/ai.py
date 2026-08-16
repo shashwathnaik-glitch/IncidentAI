@@ -34,8 +34,12 @@ class AIAnalyzeResponse(BaseModel):
 
 class AIApproveRequest(BaseModel):
     """Payload for POST /api/v1/ai/approve."""
-    action_id: str = Field(..., json_schema_extra={"example": "ACT-98234-RESTART"})
+    action_id: Optional[str] = Field(None, json_schema_extra={"example": "ACT-98234-RESTART"})
     reasoning: Optional[str] = Field(None, json_schema_extra={"example": "Approved by engineer after reviewing risk assessment."})
+    incident_id: Optional[UUID] = None
+    solution_text: Optional[str] = None
+    outcome: Optional[str] = "success"
+    failure_reason: Optional[str] = None
 
 
 class AIApproveResponse(BaseModel):

@@ -86,9 +86,31 @@ class AIService:
         Approve an AI-recommended action execution.
         """
         res_dict = self.ai_interface.approve_action(request.action_id, str(approved_by))
+        
+        # If approval was successful, record the attempt and update incident status
+        if self.db_repo and res_dict.get("status") == "approved":
+            incident_id = request.incident_id
+            if incident_id:
+                attempt_data = {
+                    "incident_id": incident_id,
+                    "solution_text": request.solution_text or request.action_id or "AI Suggested Action",
+                    "outcome": request.outcome or "success",
+                    "failure_reason": request.failure_reason,
+                    "performed_by": approved_by,
+                    "created_at": datetime.now(timezone.utc).isoformat()
+                }
+                self.db_repo.create_solution_attempt(attempt_data)
+                self.db_repo.update_incident_status(incident_id, "resolved")
+
+        action_id = res_dict.get("action_id") or request.action_id
+        if not action_id:
+            incident_id = request.incident_id
+            action_id = f"ACT-{incident_id.hex[:8]}" if incident_id else "ACT-GENERIC"
+
         return AIApproveResponse(
-            action_id=res_dict.get("action_id", request.action_id),
+            action_id=action_id,
             status=res_dict.get("status", "approved"),
             approved_by=approved_by,
             approved_at=datetime.now(timezone.utc),
         )
+

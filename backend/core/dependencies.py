@@ -53,15 +53,17 @@ def get_ai_interface() -> IAIServiceInterface:
     Dependency provider for IAIServiceInterface.
 
     Production implementation is owned by AI teammate.
-    In testing environment (settings.TESTING is True), mock implementation from tests/mocks/ is injected as a singleton.
+    In testing environment (settings.TESTING is True) or when MOCK_BEDROCK is True, mock implementation from tests/mocks/ is injected as a singleton.
     In non-testing runtime, attempting to call mock without production AI implementation raises ConfigurationError.
     """
     global _mock_ai_instance
-    if settings.TESTING:
+    from backend.core.config import MOCK_BEDROCK
+
+    if settings.TESTING or MOCK_BEDROCK:
         if _mock_ai_instance is None:
             try:
                 from backend.tests.mocks.mock_ai_interface import MockAIInterface
-                _mock_ai_instance = MockAIInterface()
+                _mock_ai_instance = MockAIInterface(db_repo=get_db_repository())
             except ImportError as err:
                 raise ConfigurationError(f"Testing environment active but mock AI import failed: {err}")
         return _mock_ai_instance

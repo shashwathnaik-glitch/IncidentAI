@@ -280,7 +280,33 @@ export const incidentService = {
       });
       if (response.ok) {
         const inc = await response.json();
-        return mapBackendIncidentToFrontend(inc);
+        const mappedInc = mapBackendIncidentToFrontend(inc);
+        try {
+          const attemptsRes = await fetch(`${API_BASE_URL}/incidents/${incidentId}/attempts`, {
+            headers: getAuthHeaders()
+          });
+          if (attemptsRes.ok) {
+            const rawAttempts = await attemptsRes.ok ? await attemptsRes.json() : [];
+            mappedInc.solutionAttempts = Array.isArray(rawAttempts)
+              ? rawAttempts.map(att => ({
+                  id: att.id,
+                  solutionText: att.solution_text,
+                  outcome: att.outcome,
+                  failureReason: att.failure_reason,
+                  performedBy: att.performed_by,
+                  executionDurationMs: att.execution_duration_ms,
+                  confidenceAtExecution: att.confidence_at_execution,
+                  rewardInfo: att.reward_info,
+                  createdAt: att.created_at
+                }))
+              : [];
+          } else {
+            mappedInc.solutionAttempts = [];
+          }
+        } catch {
+          mappedInc.solutionAttempts = [];
+        }
+        return mappedInc;
       }
     } catch {
       // fallback
@@ -354,6 +380,26 @@ export const incidentService = {
     }
 
     return createdIncident;
+  },
+
+  async getAIRecommendation(incidentId, logs = '') {
+    try {
+      const response = await fetch(`${API_BASE_URL}/ai/analyze`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          incident_id: incidentId,
+          error_logs: logs || 'No log trace associated.',
+          environment: 'production'
+        })
+      });
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (err) {
+      console.warn('Backend API /api/v1/ai/analyze unreachable.', err);
+    }
+    return null;
   },
 
   async approveResolution(incidentId, solutionText, outcome = 'success', feedbackReason = null, operatorName = 'Operator') {

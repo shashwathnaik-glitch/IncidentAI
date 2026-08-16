@@ -48,8 +48,8 @@ class IncidentService:
             severity=IncidentSeverityEnum(created_record["severity"]),
             status=IncidentStatusEnum(created_record["status"]),
             reported_by=created_record["reported_by"],
-            created_at=datetime.fromisoformat(created_record["created_at"]),
-            updated_at=datetime.fromisoformat(created_record["updated_at"]),
+            created_at=datetime.fromisoformat(created_record["created_at"]) if isinstance(created_record["created_at"], str) else created_record["created_at"],
+            updated_at=datetime.fromisoformat(created_record["updated_at"]) if isinstance(created_record["updated_at"], str) else created_record["updated_at"],
         )
 
     def get_incident(self, incident_id: UUID) -> IncidentResponse:

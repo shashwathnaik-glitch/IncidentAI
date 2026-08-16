@@ -25,6 +25,9 @@ def test_ai_interface_conformance():
 def test_mock_gating_when_testing_false():
     """Verify that dependencies.py returns CockroachDBRepository for DB and raises ConfigurationError for unconfigured AI when TESTING is False."""
     settings.TESTING = False
+    import backend.core.config
+    old_mock = backend.core.config.MOCK_BEDROCK
+    backend.core.config.MOCK_BEDROCK = False
     try:
         db_repo = get_db_repository()
         assert isinstance(db_repo, IDatabaseRepository)
@@ -33,7 +36,9 @@ def test_mock_gating_when_testing_false():
             get_ai_interface()
         assert "Production IAIServiceInterface not configured" in str(exc_info_ai.value)
     finally:
+        backend.core.config.MOCK_BEDROCK = old_mock
         settings.TESTING = True
+
 
 
 def test_jwt_secret_validation_in_non_testing():
