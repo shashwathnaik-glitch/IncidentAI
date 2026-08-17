@@ -1,17 +1,8 @@
-<<<<<<< HEAD
+# Environments
 .venv/
-__pycache__/
-*.py[cod]
-.pytest_cache/
 .env
 .env.*
 !.env.example
-.vscode/
-.idea/
-=======
-# Environments
-.env
-.env.*
 
 # Python Cache
 __pycache__/
@@ -34,4 +25,3 @@ pprof_dump/
 .idea/
 Thumbs.db
 Desktop.ini
->>>>>>> origin/Role-4

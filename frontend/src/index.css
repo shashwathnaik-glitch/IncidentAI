@@ -1,29 +1,533 @@
 @import "tailwindcss";
 
-@layer base {
-  body {
-    background-color: #090d16;
-    color: #f8fafc;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    min-height: 100vh;
-    background-image: 
-      radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.08) 0px, transparent 50%);
-  }
+@theme {
+  --color-slate-950: #f5f5f7;
+  --color-slate-900: #ffffff;
+  --color-slate-850: #ffffff;
+  --color-slate-800: rgba(0, 0, 0, 0.08);
+  --color-slate-700: rgba(0, 0, 0, 0.12);
+  --color-slate-600: rgba(0, 0, 0, 0.16);
+  --color-slate-500: #71717a;
+  --color-slate-400: #8e8e93;
+  --color-slate-300: #aeaeb2;
+  --color-slate-200: #d1d1d6;
+  --color-slate-100: #e5e5ea;
+  --color-slate-5: #f5f5f7;
+
+  --color-blue-600: #6d5ffb;
+  --color-blue-500: #6d5ffb;
+  --color-blue-400: #8c80ff;
+  --color-blue-300: #248a3d;
+  --color-emerald-400: #248a3d;
+  --color-emerald-500: #248a3d;
+
+  --radius-3xl: 12px;
+  --radius-2xl: 10px;
+  --radius-xl: 8px;
+  --radius-lg: 6px;
+  --radius-md: 4px;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+
+  --shadow-2xl: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
-/* Custom scrollbars */
+@layer base {
+  body {
+    background-color: #f5f5f7 !important;
+    color: #1d1d1f !important;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.011em !important;
+    background-image: none !important;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif !important;
+    color: #1d1d1f !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.022em !important;
+  }
+
+  h1 { font-size: 20px !important; }
+  h2 { font-size: 16px !important; }
+  h3 { font-size: 14px !important; }
+}
+
+/* Global typography weights override */
+.font-bold, .font-semibold, .font-extrabold {
+  font-weight: 500 !important;
+}
+
+/* Custom scrollbars matching macOS light mode */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: rgba(0, 0, 0, 0.22);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Frosted glass cards and surfaces (Nova light cards) */
+.bg-slate-900\/80, 
+.bg-slate-900, 
+.bg-slate-900\/95,
+.bg-slate-950\/70, 
+.bg-slate-950\/60, 
+.bg-slate-950,
+.bg-slate-900\/50,
+.bg-slate-950\/85 {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Ensure the root layout container does not create a new containing block for position: fixed descendants */
+div.min-h-screen {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+  transform: none !important;
+  perspective: none !important;
+  will-change: auto !important;
+  contain: none !important;
+}
+
+/* Global text colors overrides for light mode contrast */
+.text-white, 
+.text-slate-50, 
+.text-slate-100, 
+.text-slate-200 {
+  color: #1d1d1f !important;
+}
+
+.text-slate-300, 
+.text-slate-400, 
+.text-slate-500 {
+  color: #71717a !important;
+}
+
+/* Solid background text color restorations (like warning blocks or error flags) */
+.bg-emerald-500\/10 *, .bg-red-500\/10 *, .bg-indigo-500\/10 * {
+  color: inherit !important;
+}
+
+/* Accent logo text color correction */
+.bg-gradient-to-r.from-blue-400.to-indigo-400.bg-clip-text.text-transparent {
+  background-clip: unset !important;
+  -webkit-background-clip: unset !important;
+  color: #6d5ffb !important;
+  background-image: none !important;
+}
+
+/* Adjust warning / alert / success color overrides for light background contrast */
+.text-emerald-400, .text-emerald-500 {
+  color: #248a3d !important;
+}
+.bg-emerald-500\/10 {
+  background-color: rgba(36, 138, 61, 0.08) !important;
+}
+
+.text-red-400, .text-red-500 {
+  color: #c93b2b !important;
+}
+.bg-red-500\/10 {
+  background-color: rgba(201, 59, 43, 0.08) !important;
+}
+
+.text-indigo-400, .text-indigo-500 {
+  color: #6d5ffb !important;
+}
+.bg-indigo-500\/10 {
+  background-color: #f3f0ff !important;
+}
+
+/* Hide ambient glows and gradient effects */
+.fixed.bg-blue-600\/10, 
+.fixed.bg-indigo-600\/10,
+.absolute.bg-blue-500\/10.rounded-full.blur-3xl {
+  display: none !important;
+}
+
+/* Primary Action Buttons - Solid dark charcoal (#18181B) background, white text */
+.bg-gradient-to-r.from-blue-600.to-indigo-600,
+.bg-gradient-to-r.from-blue-600.to-cyan-600,
+.bg-gradient-to-tr.from-blue-600.to-indigo-600,
+.bg-gradient-to-r.from-indigo-600.to-purple-600,
+button.bg-blue-600, 
+button.bg-blue-500,
+button.bg-indigo-600 {
+  background: #18181b !important;
+  color: #ffffff !important;
+  border: 1px solid #18181b !important;
+  background-image: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.bg-gradient-to-r.from-blue-600.to-indigo-600 *,
+.bg-gradient-to-r.from-blue-600.to-cyan-600 *,
+.bg-gradient-to-tr.from-blue-600.to-indigo-600 *,
+.bg-gradient-to-r.from-indigo-600.to-purple-600 *,
+button.bg-blue-600 *,
+button.bg-blue-500 *,
+button.bg-indigo-600 * {
+  color: #ffffff !important;
+}
+
+/* Danger Action Buttons - Solid flat red */
+.bg-gradient-to-r.from-red-600.to-rose-600 {
+  background: #c93b2b !important;
+  color: #ffffff !important;
+  border: 1px solid #c93b2b !important;
+  background-image: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+.bg-gradient-to-r.from-red-600.to-rose-600 * {
+  color: #ffffff !important;
+}
+
+/* Success Action Buttons - Solid flat green */
+.bg-gradient-to-r.from-emerald-600.to-teal-600 {
+  background: #248a3d !important;
+  color: #ffffff !important;
+  border: 1px solid #248a3d !important;
+  background-image: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+.bg-gradient-to-r.from-emerald-600.to-teal-600 * {
+  color: #ffffff !important;
+}
+
+/* Style active tab switchers with soft light gray background and dark text */
+div.flex.bg-slate-900\/80 button.bg-blue-600,
+div.flex.bg-slate-900\/80 button.bg-blue-500,
+div.flex.bg-slate-950\/70 button.bg-blue-600,
+div.flex.bg-slate-950\/70 button.bg-blue-500,
+div.flex.bg-slate-950 button.bg-blue-600,
+div.flex.bg-slate-950 button.bg-blue-500,
+div.flex.bg-slate-950\/80 button.bg-blue-600,
+div.flex.bg-slate-950\/80 button.bg-blue-500,
+.md\:col-span-6 button.bg-blue-600,
+.md\:col-span-6 button.bg-blue-500 {
+  background: #f4f4f5 !important;
+  color: #18181b !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  box-shadow: none !important;
+}
+
+div.flex.bg-slate-900\/80 button.bg-blue-600 *,
+div.flex.bg-slate-900\/80 button.bg-blue-500 *,
+div.flex.bg-slate-950\/70 button.bg-blue-600 *,
+div.flex.bg-slate-950\/70 button.bg-blue-500 *,
+div.flex.bg-slate-950 button.bg-blue-600 *,
+div.flex.bg-slate-950 button.bg-blue-500 *,
+div.flex.bg-slate-950\/80 button.bg-blue-600 *,
+div.flex.bg-slate-950\/80 button.bg-blue-500 *,
+.md\:col-span-6 button.bg-blue-600 *,
+.md\:col-span-6 button.bg-blue-500 * {
+  color: #18181b !important;
+}
+
+/* Stat Widgets & Chip Badges Mapped to Nova Pastel Tints */
+.bg-blue-500\/10, .bg-blue-600\/10 {
+  background-color: #f3f0ff !important;
+  color: #6d5ffb !important;
+}
+.bg-indigo-500\/10, .bg-indigo-600\/10 {
+  background-color: #f3f0ff !important;
+  color: #6d5ffb !important;
+}
+.bg-emerald-500\/10, .bg-emerald-600\/10 {
+  background-color: rgba(36, 138, 61, 0.06) !important;
+  color: #248a3d !important;
+}
+.bg-red-500\/10, .bg-red-600\/10 {
+  background-color: rgba(201, 59, 43, 0.06) !important;
+  color: #c93b2b !important;
+}
+
+/* Override hero welcome banner and AI display cards to flat white cards */
+.bg-gradient-to-r.from-blue-950\/60.via-slate-900.to-indigo-950\/50,
+.bg-gradient-to-r.from-indigo-950\/60.via-slate-900.to-purple-950\/50,
+.bg-gradient-to-r.from-blue-950\/40.via-slate-950.to-indigo-950\/30 {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+  background-image: none !important;
+}
+
+/* Focus rings for inputs and buttons - Neutral grey ring */
+input[type="text"], 
+input[type="email"], 
+input[type="password"], 
+textarea, 
+select {
+  background: rgba(0, 0, 0, 0.03) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 6px !important;
+  color: #1d1d1f !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out !important;
+}
+
+input.pl-8 {
+  padding-left: 32px !important;
+}
+
+input.pl-9, input.pl-10 {
+  padding-left: 40px !important;
+}
+
+input.pr-10 {
+  padding-right: 40px !important;
+}
+
+input[type="text"]:focus, 
+input[type="email"]:focus, 
+input[type="password"]:focus, 
+textarea:focus, 
+select:focus {
+  outline: none !important;
+  border-color: #a1a1aa !important;
+  box-shadow: 0 0 0 3px rgba(161, 161, 170, 0.25) !important;
+}
+
+/* General button styling overrides */
+button, .btn {
+  border-radius: 6px !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  transition: transform 150ms ease-out, background-color 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out !important;
+}
+
+button:active, .btn:active {
+  transform: scale(0.98) !important;
+}
+
+button:focus-visible, .btn:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(161, 161, 170, 0.25) !important;
+}
+
+/* Modal Animations & Layout overrides */
+@keyframes macos-modal-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes macos-backdrop-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 {
+  animation: macos-backdrop-fade-in 150ms ease-out forwards !important;
+  background: rgba(0, 0, 0, 0.16) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4 > div {
+  animation: macos-modal-scale-in 150ms ease-out forwards !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(30px) !important;
+  -webkit-backdrop-filter: blur(30px) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Desktop Sidebar Overrides (translucent left sidebar - white theme) */
+@media (min-width: 1024px) {
+  /* Shift content wrapper to the right to make room for fixed sidebar (only when the sidebar is present) */
+  div.min-h-screen.flex.flex-col:has(header.sticky) {
+    padding-left: 240px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Flat white sidebar container */
+  header.sticky {
+    width: 240px !important;
+    height: 100vh !important;
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    z-index: 50 !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-bottom: none !important;
+    padding: 24px 16px !important;
+    background: #fafafa !important;
+    box-shadow: none !important;
+  }
+
+  header.sticky > div {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    height: 100% !important;
+    justify-content: space-between !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    gap: 32px !important;
+  }
+
+  header.sticky > div > div:first-child {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 24px !important;
+    width: 100% !important;
+  }
+
+  header.sticky > div > div:first-child > div:first-child {
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  header.sticky > div > div:last-child {
+    flex-direction: column-reverse !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+    width: 100% !important;
+  }
+
+  header.sticky .border-l {
+    border-left: none !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+    padding-left: 0 !important;
+    padding-top: 16px !important;
+    width: 100% !important;
+  }
+
+  main {
+    padding: 32px !important;
+    box-sizing: border-box !important;
+  }
+
+  footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+    background: rgba(255, 255, 255, 0.5) !important;
+  }
+}
+
+/* Sidebar Role Badges specifically matched to layout indicators */
+header.sticky div.px-3.py-1\.5:has(svg.lucide-shield-check),
+header.sticky div.px-3.py-1\.5:has(svg.lucide-layout-dashboard) {
+  background: #f3f0ff !important;
+  border-color: rgba(109, 95, 251, 0.2) !important;
+  color: #6d5ffb !important;
+  border-radius: 8px !important;
+}
+
+header.sticky div.px-3.py-1\.5:has(svg.lucide-shield-check) *,
+header.sticky div.px-3.py-1\.5:has(svg.lucide-layout-dashboard) * {
+  color: #6d5ffb !important;
+}
+
+header.sticky span.bg-indigo-500\/20, 
+header.sticky span.bg-blue-500\/20 {
+  background: #e4e4e7 !important;
+  color: #18181b !important;
+}
+
+/* Sidebar Logout Button */
+header.sticky button {
+  background: #f4f4f5 !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  color: #71717a !important;
+}
+header.sticky button:hover {
+  background: #fee2e2 !important;
+  color: #ef4444 !important;
+  border-color: rgba(239, 68, 68, 0.2) !important;
+}
+
+/* BUG FIX 1: Historical Solution Attempts Memory panel layout overlap scoped to list headers */
+div.space-y-4.pt-2:has(h3) > div.flex {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+}
+
+div.space-y-4.pt-2:has(h3) > div.flex > div:last-child {
+  flex-wrap: wrap !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  justify-content: flex-start !important;
+  gap: 4px !important;
+}
+
+/* BUG FIX 2: Similar Incidents Vector Matches card overflow scoped to similarity grids */
+div.space-y-3.pt-2:has(div.font-mono) > div.grid > div {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  min-width: 0 !important;
+}
+
+div.space-y-3.pt-2:has(div.font-mono) > div.grid > div > div:first-child {
+  min-width: 0 !important;
+  flex: 1 !important;
+}
+
+div.space-y-3.pt-2:has(div.font-mono) > div.grid > div > div:first-child > div:last-child {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+}
+
+div.space-y-3.pt-2:has(div.font-mono) > div.grid > div > div:last-child {
+  flex-shrink: 0 !important;
+}
+
+/* Adjust warning / alert amber text colors for contrast on light background */
+.text-amber-200, .text-amber-300, .text-amber-300\/90 {
+  color: #78350f !important;
+}
+.text-amber-400 {
+  color: #b45309 !important;
+}
+.bg-amber-500\/10, .bg-amber-500\/15 {
+  background-color: #fffbeb !important;
+  border-color: rgba(217, 119, 6, 0.2) !important;
+}
+.bg-amber-500\/20 {
+  background-color: rgba(217, 119, 6, 0.12) !important;
+  color: #78350f !important;
 }

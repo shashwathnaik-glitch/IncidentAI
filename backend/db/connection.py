@@ -6,6 +6,8 @@ from functools import wraps
 import psycopg2
 from psycopg2 import pool
 from psycopg2.extensions import ISOLATION_LEVEL_SERIALIZABLE
+from dotenv import load_dotenv
+load_dotenv()
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
