@@ -101,7 +101,7 @@ class Settings(BaseSettings):
 # Amazon Bedrock / AI configuration
 # ---------------------------------------------------------------------------
 
-BEDROCK_REGION: str = os.getenv("AWS_REGION", "us-east-1")
+BEDROCK_REGION: str = os.getenv("BEDROCK_REGION", "us-west-2")
 
 BEDROCK_TEXT_MODEL: str = os.getenv(
     "BEDROCK_TEXT_MODEL",
@@ -119,6 +119,10 @@ BEDROCK_MAX_TOKENS: int = int(
 
 MOCK_BEDROCK: bool = (
     os.getenv("MOCK_BEDROCK", "false").lower() == "true"
+)
+
+MOCK_EMBEDDINGS: bool = (
+    os.getenv("MOCK_EMBEDDINGS", "true").lower() == "true"
 )
 
 # ---------------------------------------------------------------------------

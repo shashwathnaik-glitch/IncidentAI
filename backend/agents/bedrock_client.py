@@ -31,6 +31,7 @@ from backend.core.config import (
     BEDROCK_REGION,
     BEDROCK_TEXT_MODEL,
     MOCK_BEDROCK,
+    MOCK_EMBEDDINGS,
 )
 
 logger = logging.getLogger(__name__)
@@ -193,16 +194,29 @@ class BedrockClient:
         text_model: str = BEDROCK_TEXT_MODEL,
         embedding_model: str = BEDROCK_EMBEDDING_MODEL,
         max_tokens: int = BEDROCK_MAX_TOKENS,
-        mock_mode: bool = MOCK_BEDROCK,
+        mock_mode: Optional[bool] = None,
+        mock_text_mode: Optional[bool] = None,
+        mock_embedding_mode: Optional[bool] = None,
     ) -> None:
         self.region = region
         self.text_model = text_model
         self.embedding_model = embedding_model
         self.max_tokens = max_tokens
-        self.mock_mode = mock_mode
+
+        # Backwards compatibility and split modes logic
+        if mock_mode is not None:
+            self.mock_text_mode = mock_mode
+            self.mock_embedding_mode = mock_mode
+        else:
+            self.mock_text_mode = mock_text_mode if mock_text_mode is not None else MOCK_BEDROCK
+            self.mock_embedding_mode = mock_embedding_mode if mock_embedding_mode is not None else MOCK_EMBEDDINGS
+
+        # Deprecated single mock_mode attribute for other clients who access self.mock_mode
+        self.mock_mode = self.mock_text_mode and self.mock_embedding_mode
+
         self._client = None
 
-        if not self.mock_mode:
+        if not self.mock_text_mode or not self.mock_embedding_mode:
             self._client = self._create_boto_client()
 
     def _create_boto_client(self) -> Any:
@@ -256,7 +270,7 @@ class BedrockClient:
         if not text or not text.strip():
             raise ValueError("Cannot generate embedding for empty text.")
 
-        if self.mock_mode:
+        if self.mock_embedding_mode:
             logger.debug("BedrockClient [MOCK]: generating embedding for text length=%d", len(text))
             return _mock_embedding(text)
 
@@ -320,7 +334,7 @@ class BedrockClient:
             BedrockUnavailableError: Network/service error.
             BedrockCredentialError:  Authentication failure.
         """
-        if self.mock_mode:
+        if self.mock_text_mode:
             raw = _mock_generate_text(prompt, system_prompt)
             if response_model is not None:
                 return self._parse_with_retry(raw, response_model, prompt, system_prompt, attempt=2)
