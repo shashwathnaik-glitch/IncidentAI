@@ -4,7 +4,7 @@
  * Provides resilient fallback metrics for standalone local testing.
  */
 
-const API_BASE_URL = '/api/v1';
+const API_BASE_URL = 'http://44.213.103.173:8000/api/v1';
 
 function getAuthHeaders() {
   const token = localStorage.getItem('incidentmind_token');

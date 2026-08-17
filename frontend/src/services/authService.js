@@ -5,7 +5,7 @@
  * so both Employee and Admin roles can be fully tested.
  */
 
-const API_BASE_URL = '/api/v1';
+const API_BASE_URL = 'http://44.213.103.173:8000/api/v1';
 
 // Demo fallback accounts for standalone local testing
 const DEMO_USERS = [
